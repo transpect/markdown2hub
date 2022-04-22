@@ -10,20 +10,17 @@ $ saxon -xsl:xsl/markdown2hub.xsl -it:main href=file:/home/markdown2hub/README.m
 
 We support Markdown in the CommonMark flavour. Currently, the following elements are implemented:
 
-* section hierarchy
-* tables
+### section hierarchy
 * lists
-** nested lists
-** enumerated and itemized lists
-** numbering: 1., 1.1 etc
-* images
-* program listings
-* blockquotes
-* bold, italic
-* hyperlinks
+* images ![transpect](https://raw.githubusercontent.com/transpect/transpect.github.io/master/icons/favicon-32x32.png)
+* **bold**, _italic_
+* [hyperlinks](https://github.com/transpect/markdown2hub)
+> blockquotes
+```
+program listings
+```
+tables |
+   --- | 
+...    |
 
-## maintainer, license
 
- maintainer | license
---- | ---
-[@mkraetke](https://github.com/mkraetke)   | FreeBSD
