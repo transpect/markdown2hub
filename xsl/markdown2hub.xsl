@@ -9,7 +9,14 @@
   version="2.0">
   
   <!-- *
-       * 
+       * converts Markdown to Hub XML.
+       *
+       * usage: either call md:transform($markdown) 
+       *        from an importing stylesheet or invoke 
+       *        the initial template:
+       *        
+       *        $ saxon -xsl saxon -xsl:xsl/markdown2hub.xsl \
+       *        -it:main href=file:/markdown2hub/README.md -o:out.hub.xml
        * -->
   
   <!-- href expects an file uri -->
@@ -29,7 +36,6 @@
   <xsl:variable name="md:bold-italic-regex"          as="xs:string" select="'[\*_]{1,2}.+[\*_]{1,2}'"/>
   <xsl:variable name="md:image-regex"                as="xs:string" select="'!\[(.+?)\]\((.+?)\)'"/>
   <xsl:variable name="md:hyperlinks-regex"           as="xs:string" select="'\[(.+?)\]\((.+?)\)'"/>
-  
   
   <!-- *
        * initial template
@@ -86,6 +92,8 @@
     <xsl:apply-templates select="md:bold-italics(.)" mode="md:images"/>
   </xsl:template>
   
+  <xsl:template match="para[matches(., $md:codeblock-regex)][normalize-space()]" mode="md:transform"/>
+  
   <!-- *
        * mode md:images
        * -->
@@ -101,8 +109,6 @@
   <xsl:template match="text()" mode="md:hyperlinks">
     <xsl:sequence select="md:hyperlinks(.)"/>
   </xsl:template>
-  
-  <xsl:template match="para[matches(., $md:codeblock-regex)][normalize-space()]" mode="md:transform"/>
   
   <!-- *
        * mode md:blockquotes
@@ -152,7 +158,18 @@
       <info>
         <title><xsl:value-of select="replace($href, '^(.+/)(.+)?$', '$2')"/></title>
       </info>
-      <xsl:apply-templates select="md:sectionize(md:create-lists(md:create-quotes(md:create-tables(md:create-blocks(md:split-lines($markdown)))), 0), 0)" mode="md:transform"/>
+      <xsl:apply-templates select="md:sectionize(
+                                       md:create-lists(
+                                           md:create-quotes(
+                                               md:create-tables(
+                                                   md:create-blocks(
+                                                       md:split-lines($markdown)
+                                                   )
+                                               )
+                                           ), 0
+                                       ), 0
+                                   )" 
+                           mode="md:transform"/>
     </hub>
   </xsl:function>
   
