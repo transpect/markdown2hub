@@ -15,12 +15,15 @@ We support Markdown in the CommonMark flavour. Currently, the following elements
 * images ![transpect](https://raw.githubusercontent.com/transpect/transpect.github.io/master/icons/favicon-32x32.png)
 * **bold**, _italic_
 * [hyperlinks](https://github.com/transpect/markdown2hub)
+* horizontal rule
+---
 > blockquotes
 ```
 program listings
 ```
 tables |
    --- | 
-...    |
+...
+|
 
 
