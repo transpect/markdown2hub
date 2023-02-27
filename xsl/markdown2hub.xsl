@@ -22,12 +22,18 @@
   <!-- href expects an file uri -->
   
   <xsl:param name="href" as="xs:string"/>
+
+  <!-- alternative: input via string -->
+  
+  <xsl:param name="string" as="xs:string?"/>
   
   <!-- *
        * global variables
        * -->
   
-  <xsl:variable name="markdown"                      as="xs:string" select="unparsed-text($href)"/>
+  <xsl:variable name="markdown"                      as="xs:string" select="if(unparsed-text-available($href)
+                                                                            then unparsed-text($href)
+                                                                            else normalize-space($string)"/>
   <xsl:variable name="md:table-horizontal-sep-regex" as="xs:string" select="'---+\s*\|'"/>
   <xsl:variable name="md:table-vertical-sep-regex"   as="xs:string" select="'\|'"/>
   <xsl:variable name="md:list-marker-regex"          as="xs:string" select="'((([-\*]+|[\d]\.?))+)'"/>
