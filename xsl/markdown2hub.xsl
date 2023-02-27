@@ -31,7 +31,7 @@
        * global variables
        * -->
   
-  <xsl:variable name="markdown"                      as="xs:string" select="if(unparsed-text-available($href)
+  <xsl:variable name="markdown"                      as="xs:string" select="if(unparsed-text-available($href))
                                                                             then unparsed-text($href)
                                                                             else normalize-space($string)"/>
   <xsl:variable name="md:table-horizontal-sep-regex" as="xs:string" select="'---+\s*\|'"/>
