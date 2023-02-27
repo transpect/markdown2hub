@@ -335,7 +335,7 @@
     <xsl:param name="blocks" as="element()*"/>
     <xsl:param name="level" as="xs:integer"/>
     <xsl:variable name="hashtag-regex" as="xs:string" 
-                  select="string-join(('^', for $i in (0 to $level) return '#', '\s'), '')"/>
+                  select="'^#+\s'"/>
     <xsl:for-each-group select="$blocks" group-starting-with="self::para[matches(., $hashtag-regex)]">
       <xsl:choose>
         <xsl:when test="current-group()[self::para[matches(., $hashtag-regex)]]">
