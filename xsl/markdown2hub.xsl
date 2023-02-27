@@ -21,7 +21,7 @@
   
   <!-- href expects an file uri -->
   
-  <xsl:param name="href" as="xs:string"/>
+  <xsl:param name="href" as="xs:string?"/>
 
   <!-- alternative: input via string -->
   
@@ -69,7 +69,7 @@
                       |itemizedlist/para" mode="md:transform">
     <listitem override="{replace(., concat('\s*', $md:list-marker-regex, '.+?$'), '$1')}">
       <para>
-        <xsl:value-of select="normalize-space(replace(., $md:list-marker-regex, ''))"/>
+        <xsl:apply-templates select="md:bold-italics(normalize-space(replace(., $md:list-marker-regex, '')))" mode="md:images"/>
       </para>
     </listitem>
   </xsl:template>
