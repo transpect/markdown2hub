@@ -154,6 +154,9 @@
   
   <xsl:function name="md:transform" as="element(hub)">
     <xsl:param name="markdown" as="xs:string"/>
+    <xsl:variable name="sect-start-level" as="xs:integer"
+                  select="min(for $i in tokenize($markdown, '\n', 'm')[matches(., '#')]
+                              return string-length(replace(normalize-space($i), '^(#+).+?$', '$1'))) - 1"/>
     <hub>
       <info>
         <title><xsl:value-of select="replace($href, '^(.+/)(.+)?$', '$2')"/></title>
@@ -167,7 +170,7 @@
                                                    )
                                                )
                                            ), 0
-                                       ), 0
+                                       ), $sect-start-level
                                    )" 
                            mode="md:transform"/>
     </hub>
@@ -335,7 +338,7 @@
     <xsl:param name="blocks" as="element()*"/>
     <xsl:param name="level" as="xs:integer"/>
     <xsl:variable name="hashtag-regex" as="xs:string" 
-                  select="'^#+\s'"/>
+                  select="string-join(('^', for $i in (0 to $level) return '#', '\s'), '')"/>
     <xsl:for-each-group select="$blocks" group-starting-with="self::para[matches(., $hashtag-regex)]">
       <xsl:choose>
         <xsl:when test="current-group()[self::para[matches(., $hashtag-regex)]]">
