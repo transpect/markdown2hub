@@ -161,8 +161,8 @@
   <xsl:function name="md:transform" as="element(hub)">
     <xsl:param name="markdown" as="xs:string"/>
     <xsl:variable name="sect-start-level" as="xs:integer"
-                  select="min(for $i in tokenize($markdown, '\n', 'm')[matches(., '#')]
-                              return string-length(replace(normalize-space($i), '^(#+).+?$', '$1'))) - 1"/>
+                  select="min(for $i in tokenize($markdown, '\n', 'm')[matches(normalize-space(.), '^#')]
+                              return string-length(replace(normalize-space($i), '^(#+).+?$', '$1')))"/>
     <hub>
       <info>
         <title><xsl:value-of select="replace($href, '^(.+/)(.+)?$', '$2')"/></title>
