@@ -45,6 +45,7 @@
   <xsl:variable name="md:bold-italic-regex"          as="xs:string"  select="'[\*_]{1,2}.+[\*_]{1,2}'"/>
   <xsl:variable name="md:image-regex"                as="xs:string"  select="'!\[(.+?)\]\((.+?)\)'"/>
   <xsl:variable name="md:hyperlinks-regex"           as="xs:string"  select="'\[(.+?)\]\((.+?)\)'"/>
+  <xsl:variable name="md:control-chars-regex"        as="xs:string" select="'[`#*\[\]\)\)]'"/>
   
   <!-- *
        * initial template
@@ -373,7 +374,7 @@
     <hub>
       <xsl:for-each select="$lines">
         <para>
-          <xsl:sequence select="."/>
+          <xsl:sequence select="replace(., concat('\\(', $md:control-chars-regex, ')'), '$1', 'm')"/>
         </para>
       </xsl:for-each>
     </hub>
