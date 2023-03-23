@@ -68,7 +68,7 @@
   
   <xsl:template match="orderedlist/para
                       |itemizedlist/para" mode="md:transform">
-    <listitem override="{replace(., concat('\s*', $md:list-marker-regex, '.+?$'), '$1')}">
+    <listitem>
       <para>
         <xsl:apply-templates select="md:bold-italics(normalize-space(replace(., $md:list-marker-regex, '')))" mode="md:images"/>
       </para>
