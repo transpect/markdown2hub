@@ -34,14 +34,15 @@
   <xsl:variable name="markdown"                      as="xs:string" select="if(unparsed-text-available($href))
                                                                             then unparsed-text($href)
                                                                             else normalize-space($string)"/>
-  <xsl:variable name="md:table-horizontal-sep-regex" as="xs:string" select="'---+\s*\|'"/>
-  <xsl:variable name="md:table-vertical-sep-regex"   as="xs:string" select="'\|'"/>
-  <xsl:variable name="md:list-marker-regex"          as="xs:string" select="'((([-\*]+|[\d]\.?))+)'"/>
-  <xsl:variable name="md:codeblock-regex"            as="xs:string" select="'^\s*```([a-z]+)?'"/>
-  <xsl:variable name="md:blockquote-regex"           as="xs:string" select="'^\s*&gt;'"/>
-  <xsl:variable name="md:bold-italic-regex"          as="xs:string" select="'[\*_]{1,2}.+[\*_]{1,2}'"/>
-  <xsl:variable name="md:image-regex"                as="xs:string" select="'!\[(.+?)\]\((.+?)\)'"/>
-  <xsl:variable name="md:hyperlinks-regex"           as="xs:string" select="'\[(.+?)\]\((.+?)\)'"/>
+  <xsl:variable name="md:numbered-sect-elements"     as="xs:boolean" select="true()"/>
+  <xsl:variable name="md:table-horizontal-sep-regex" as="xs:string"  select="'---+\s*\|'"/>
+  <xsl:variable name="md:table-vertical-sep-regex"   as="xs:string"  select="'\|'"/>
+  <xsl:variable name="md:list-marker-regex"          as="xs:string"  select="'((([-\*]+|[\d]\.?))+)'"/>
+  <xsl:variable name="md:codeblock-regex"            as="xs:string"  select="'^\s*```([a-z]+)?'"/>
+  <xsl:variable name="md:blockquote-regex"           as="xs:string"  select="'^\s*&gt;'"/>
+  <xsl:variable name="md:bold-italic-regex"          as="xs:string"  select="'[\*_]{1,2}.+[\*_]{1,2}'"/>
+  <xsl:variable name="md:image-regex"                as="xs:string"  select="'!\[(.+?)\]\((.+?)\)'"/>
+  <xsl:variable name="md:hyperlinks-regex"           as="xs:string"  select="'\[(.+?)\]\((.+?)\)'"/>
   
   <!-- *
        * initial template
@@ -161,8 +162,9 @@
   <xsl:function name="md:transform" as="element(hub)">
     <xsl:param name="markdown" as="xs:string"/>
     <xsl:variable name="sect-start-level" as="xs:integer"
-                  select="min(for $i in tokenize($markdown, '\n', 'm')[matches(normalize-space(.), '^#')]
-                              return string-length(replace(normalize-space($i), '^(#+).+?$', '$1')))"/>
+                  select="(min(for $i in tokenize($markdown, '\n', 'm')[matches(normalize-space(.), '^#')]
+                               return string-length(replace(normalize-space($i), '^(#+).+?$', '$1'))),
+                               0)[1]"/>
     <hub>
       <info>
         <title><xsl:value-of select="replace($href, '^(.+/)(.+)?$', '$2')"/></title>
@@ -348,10 +350,13 @@
     <xsl:for-each-group select="$blocks" group-starting-with="self::para[matches(., $hashtag-regex)]">
       <xsl:choose>
         <xsl:when test="current-group()[self::para[matches(., $hashtag-regex)]]">
-          <section role="sect-{$level + 1}">
+          <xsl:element name="{if($md:numbered-sect-elements) 
+                              then concat('sect', $level + 1)
+                              else 'section'}">
+            <xsl:attribute name="role" select="concat('sect-', $level + 1)"/>          
             <xsl:apply-templates select="current-group()[1]" mode="md:sections"/>
             <xsl:sequence select="md:sectionize(current-group()[position() ne 1], $level + 1)"/>
-          </section>
+          </xsl:element>
         </xsl:when>
         <xsl:otherwise>
           <xsl:sequence select="current-group()"/>
