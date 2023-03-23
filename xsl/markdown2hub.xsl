@@ -8,6 +8,8 @@
   exclude-result-prefixes="xs md tr"
   version="2.0">
   
+  <xsl:output indent="yes"/>
+  
   <!-- *
        * converts Markdown to Hub XML.
        *
@@ -346,14 +348,14 @@
     <xsl:param name="blocks" as="element()*"/>
     <xsl:param name="level" as="xs:integer"/>
     <xsl:variable name="hashtag-regex" as="xs:string" 
-                  select="string-join(('^', for $i in (0 to $level) return '#', '\s'), '')"/>
+                  select="string-join(('^', for $i in (1 to $level) return '#', '\s'), '')"/>
     <xsl:for-each-group select="$blocks" group-starting-with="self::para[matches(., $hashtag-regex)]">
       <xsl:choose>
         <xsl:when test="current-group()[self::para[matches(., $hashtag-regex)]]">
           <xsl:element name="{if($md:numbered-sect-elements) 
-                              then concat('sect', $level + 1)
+                              then concat('sect', $level)
                               else 'section'}">
-            <xsl:attribute name="role" select="concat('sect-', $level + 1)"/>          
+            <xsl:attribute name="role" select="concat('sect-', $level)"/>          
             <xsl:apply-templates select="current-group()[1]" mode="md:sections"/>
             <xsl:sequence select="md:sectionize(current-group()[position() ne 1], $level + 1)"/>
           </xsl:element>
