@@ -169,9 +169,7 @@
                                return string-length(replace(normalize-space($i), '^(#+).+?$', '$1'))),
                                1)[1]"/>
     <hub>
-      <info>
-        <title><xsl:value-of select="replace($href, '^(.+/)(.+)?$', '$2')"/></title>
-      </info>
+      <title><xsl:value-of select="replace($href, '^(.+/)(.+)?$', '$2')"/></title>
       <xsl:apply-templates select="md:sectionize(
                                        md:create-lists(
                                            md:create-quotes(
