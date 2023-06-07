@@ -39,7 +39,7 @@
   <xsl:variable name="md:numbered-sect-elements"     as="xs:boolean" select="true()"/>
   <xsl:variable name="md:table-horizontal-sep-regex" as="xs:string"  select="'---+\s*\|'"/>
   <xsl:variable name="md:table-vertical-sep-regex"   as="xs:string"  select="'\|'"/>
-  <xsl:variable name="md:list-marker-regex"          as="xs:string"  select="'((([-\*]+|[\d]\.?))+)'"/>
+  <xsl:variable name="md:list-marker-regex"          as="xs:string"  select="'^(((\s*[-\*]+|[\d]\.?))+)'"/>
   <xsl:variable name="md:codeblock-regex"            as="xs:string"  select="'^\s*```([a-z]+)?'"/>
   <xsl:variable name="md:blockquote-regex"           as="xs:string"  select="'^\s*&gt;'"/>
   <xsl:variable name="md:bold-italic-regex"          as="xs:string"  select="'[\*_]{1,2}.+[\*_]{1,2}'"/>
@@ -257,11 +257,11 @@
     <xsl:param name="blocks" as="element()*"/>
     <xsl:param name="level" as="xs:integer"/>
     <xsl:variable name="marker-regex" as="xs:string" 
-                  select="string-join(('^\s*(',
+                  select="string-join(('^\s*((',
                                        for $i in (0 to $level) return '[-\*]',
-                                       '|',
+                                       ')|(',
                                        for $i in (0 to $level) return '[\d+][\.\)]',
-                                       '\s*)'), 
+                                       ')\s*)'), 
                                       '')"/>
     <xsl:for-each-group select="$blocks"
                         group-adjacent="matches(., $marker-regex)">
